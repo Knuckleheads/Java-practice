@@ -1,20 +1,23 @@
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 public class Main {
 
-    public static final String STAFF_TXT = "data/staff.txt";
+    private static final String STAFF_TXT = "data/staff.txt";
 
     public static void main(String[] args) {
         List<Employee> staff = Employee.loadStaffFromFile(STAFF_TXT);
-        sortBySalaryAndAlphabet(staff);
-        for (Employee emp : staff) {
-            System.out.println(emp);
-        }
-    }
-    public static void sortBySalaryAndAlphabet(List<Employee> staff){
-
-        staff.sort(Comparator.comparing(Employee::getSalary).thenComparing(Employee::getName));
-        }
+        Employee employeeMaxSalary = findEmployeeWithHighestSalary(staff, 2017);
+        System.out.println(employeeMaxSalary);
     }
 
+    public static Employee findEmployeeWithHighestSalary(List<Employee> staff, int year) {
+        Employee emp = staff.stream()
+                .filter(e -> e.getWorkStart().getYear() + 1900 == year)
+                .max(Comparator.comparing(Employee::getSalary))
+                .get();
+
+        return emp;
+    }
+}
